@@ -23,15 +23,16 @@ class BarangPeminjamanResource extends Resource
     protected static ?string $pluralModelLabel = 'Daftar Pinjaman User';
 
     public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->orderByRaw("CASE 
-                WHEN status = 'proses' THEN 1 
-                WHEN status = 'disetujui' THEN 2 
-                WHEN status = 'ditolak' THEN 3 
-                ELSE 4 END")
-            ->latest(); 
-    }
+{
+    return parent::getEloquentQuery()
+        ->orderBy('created_at', 'desc') // Paling baru di atas
+        ->orderByRaw("CASE 
+            WHEN status = 'proses' THEN 1 
+            WHEN status = 'disetujui' THEN 2 
+            WHEN status = 'ditolak' THEN 3 
+            ELSE 4 END");
+}
+
     public static function form(Form $form): Form
     {
         return $form
@@ -102,6 +103,13 @@ class BarangPeminjamanResource extends Resource
                     ->color('danger')
                     ->visible(fn ($record) => $record->status === 'pending')
                     ->action(function ($record) {
+                        // Kembalikan stok barang saat peminjaman ditolak
+                        $barang = $record->barang;
+                        if ($barang) {
+                            $barang->jumlah_barang += $record->jumlah;
+                            $barang->save();
+                        }
+
                         $record->status = 'ditolak';
                         $record->save();
                     }),

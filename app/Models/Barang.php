@@ -17,7 +17,13 @@ class Barang extends Model
         'kbarang_id',
         'kode_barang',
         'jumlah_barang',
+        'status_pinjam',
         'image',
+    ];
+
+    protected $casts = [
+        'status_pinjam' => 'boolean',
+        'jumlah_barang' => 'integer',
     ];
 
     public function category()
@@ -29,6 +35,7 @@ class Barang extends Model
     {
         return $this->belongsTo(Kbarang::class);
     }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
@@ -38,9 +45,7 @@ class Barang extends Model
     }
 
     public function maintenances()
-        {
-            return $this->hasMany(BarangMaintenance::class);
-        }
-
-
+    {
+        return $this->hasMany(BarangMaintenance::class);
+    }
 }

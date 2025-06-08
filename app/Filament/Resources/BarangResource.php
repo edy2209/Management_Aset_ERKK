@@ -21,13 +21,12 @@ class BarangResource extends Resource
     protected static ?string $navigationLabel = 'Tambah Barang';
     protected static ?string $navigationGroup = 'Detail Barang';
 
-
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Select::make('category_id')
-                    ->label('category barang')
+                    ->label('Category barang')
                     ->relationship('category', 'name')
                     ->required(),
                 Forms\Components\Select::make('kbarang_id')
@@ -41,11 +40,20 @@ class BarangResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('jumlah_barang')
-                    ->required(),
+                    ->required()
+                    ->numeric(),
+                Forms\Components\Select::make('status_pinjam')
+                    ->label('Status Pinjam')
+                    ->options([
+                        true => 'Boleh Dipinjam',
+                        false => 'Inventaris (Tidak Bisa Dipinjam)',
+                    ])
+                    ->required()
+                    ->default(true),
                 Forms\Components\FileUpload::make('image')
                     ->label('Gambar Barang')
                     ->image()
-                    ->directory('barang-images') // Direktori penyimpanan di storage
+                    ->directory('barang-images')
                     ->required(),
             ]);
     }
@@ -56,7 +64,7 @@ class BarangResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('image')
                     ->label('Gambar')
-                    ->disk('public'), // Disk penyimpanan
+                    ->disk('public'),
                 Tables\Columns\TextColumn::make('category.name')
                     ->label('Category')
                     ->searchable(),
@@ -66,14 +74,24 @@ class BarangResource extends Resource
                 Tables\Columns\TextColumn::make('kode_barang')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('jumlah_barang'),
+                Tables\Columns\IconColumn::make('status_pinjam')
+                    ->label('Status Pinjam')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-check-circle')
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->trueColor('success')
+                    ->falseColor('danger')
+                    ->getStateUsing(fn ($record) => (bool) $record->status_pinjam),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime(),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime(),
-                
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('status_pinjam')
+                    ->label('Status Pinjam')
+                    ->options([
+                        true => 'Boleh Dipinjam',
+                        false => 'Tidak Bisa Dipinjam',
+                    ]),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
