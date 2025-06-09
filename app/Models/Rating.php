@@ -13,4 +13,11 @@ class Rating extends Model
         'rating',
         'feedback',
     ];
+
+    // Di model Rating.php
+    public function user()
+    {
+        return $this->belongsTo(Peminjam::class, 'user_id');
+    }
+
 }

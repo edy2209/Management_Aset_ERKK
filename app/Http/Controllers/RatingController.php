@@ -37,4 +37,12 @@ class RatingController extends Controller
 
         return response()->json(['success' => true, 'rating' => $rating]);
     }
+
+    //get data rating
+    public function index()
+    {
+        $ratings = Rating::with('user')->latest()->get(); // gunakan eager loading jika relasi dengan user
+        return response()->json(['ratings' => $ratings]);
+    }
+
 }

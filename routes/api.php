@@ -81,3 +81,5 @@ Route::post('midtrans/notification', [MidtransController::class, 'handle'])
 
 Route::get('/history-denda/{userId}', [HistoryDendaController::class, 'index']);
 
+Route::get('/rating', [RatingController::class, 'index']);
+
