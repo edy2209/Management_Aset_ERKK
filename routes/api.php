@@ -83,3 +83,5 @@ Route::get('/history-denda/{userId}', [HistoryDendaController::class, 'index']);
 
 Route::get('/rating', [RatingController::class, 'index']);
 
+//konfirmasi peminjaman
+Route::post('/peminjaman/{id}/konfirmasi', [BarangPeminjamanController::class, 'konfirmasi']);

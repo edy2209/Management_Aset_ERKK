@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Illuminate\Support\Facades\DB;
+use App\Models\PeminjamanKonfirmasi;
 
 class BarangPeminjaman extends Model
 {
@@ -37,6 +39,10 @@ class BarangPeminjaman extends Model
     public function kbarang()
     {
         return $this->belongsTo(Kbarang::class);
+    }
+    public function konfirmasi()
+    {
+        return $this->hasOne(PeminjamanKonfirmasi::class, 'peminjaman_id');
     }
     public function getActivitylogOptions(): LogOptions
     {
