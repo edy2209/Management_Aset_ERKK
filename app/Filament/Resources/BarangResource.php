@@ -12,6 +12,9 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Models\BarangCustomField;
+
+
 
 class BarangResource extends Resource
 {
@@ -55,6 +58,28 @@ class BarangResource extends Resource
                     ->image()
                     ->directory('barang-images')
                     ->required(),
+                
+                Forms\Components\Repeater::make('customFields')
+                    ->label('Inputan Tambahan')
+                    ->relationship()
+                    ->schema([
+                        Forms\Components\TextInput::make('key')->label('Keterangan')->required(),
+                        Forms\Components\TextInput::make('value')->label('Isi')->nullable(),
+                    ])
+                    ->defaultItems(0)
+                    ->createItemButtonLabel('Tambah Inputan')
+                    ->columns(2),
+
+                //repeter untuk view
+                Forms\Components\Repeater::make('customFields')
+                    ->label('Inputan Tambahan')
+                    ->schema([
+                        Forms\Components\TextInput::make('key')->label('Keterangan')->disabled(),
+                        Forms\Components\TextInput::make('value')->label('Isi')->disabled(),
+                    ])
+                    ->columns(2)
+                    ->disabled()
+                    ->visibleOn('view'),
             ]);
     }
 
@@ -72,6 +97,7 @@ class BarangResource extends Resource
                     ->label('Quality Barang'),
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('kode_barang')
+                    ->label('Kode Barang')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('jumlah_barang'),
                 Tables\Columns\IconColumn::make('status_pinjam')
@@ -94,6 +120,7 @@ class BarangResource extends Resource
                     ]),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([

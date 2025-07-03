@@ -85,3 +85,25 @@ Route::get('/rating', [RatingController::class, 'index']);
 
 //konfirmasi peminjaman
 Route::post('/peminjaman/{id}/konfirmasi', [BarangPeminjamanController::class, 'konfirmasi']);
+Route::get('/barang/{id}', function ($id) {
+    $barang = \App\Models\Barang::with(['category', 'customFields'])->findOrFail($id);
+    return response()->json([
+        'success' => true,
+        'data' => [
+            'id' => $barang->id,
+            'name' => $barang->name,
+            'kode_barang' => $barang->kode_barang,
+            'jumlah_barang' => $barang->jumlah_barang,
+            'status_pinjam' => $barang->status_pinjam,
+            'image_url' => $barang->image ? asset('storage/barang-images/' . $barang->image) : null,
+            'category' => $barang->category->name ?? '-',
+            'created_at' => $barang->created_at,
+            'custom_fields' => $barang->customFields->map(function($f) {
+                return [
+                    'key' => $f->key,
+                    'value' => $f->value,
+                ];
+            }),
+        ]
+    ]);
+});

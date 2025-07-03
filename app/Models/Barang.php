@@ -48,4 +48,9 @@ class Barang extends Model
     {
         return $this->hasMany(BarangMaintenance::class);
     }
+
+    public function customFields()
+    {
+        return $this->hasMany(BarangCustomField::class);
+    }
 }
