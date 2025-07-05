@@ -74,7 +74,7 @@ return [
 
     // 'brand' => \App\Filament\AdminPanel::getBrand(),
   
-    'brand' => 'MA-Aset', // Kosongkan jika hanya ingin menggunakan logo
+    'brand' => 'MA-Asset', // Kosongkan jika hanya ingin menggunakan logo
      // Logo akan diatur melalui FilamentBrandServiceProvider
         
 
